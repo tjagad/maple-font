@@ -20,6 +20,7 @@ from source.py.utils import (
     change_glyph_width_or_scale,
     check_font_patcher,
     check_directory_hash,
+    expand_custom_tag_bg,
     patch_instance,
     verify_glyph_width,
     archive_fonts,
@@ -41,7 +42,7 @@ from source.py.feature import (
 )
 
 
-FONT_VERSION = "v7.8"
+FONT_VERSION = "v7.9"
 # =========================================================================================
 
 
@@ -969,6 +970,8 @@ def rename_glyph_name(
             "tag_uni061C.liga": "tag_mark.liga",
             "tag_u1F5C8.liga": "tag_note.liga",
             "tag_uni26A0.liga": "tag_warning.liga",
+            "uni266F_start.bg": "sharp_start.bg",
+            "uni266F_end.bg": "sharp_end.bg",
         },
     }
 
@@ -1500,6 +1503,9 @@ def build_variable_fonts(font_config: FontConfig, build_option: BuildOption):
                 input_file.replace(".ttf", ".glyphs").replace("-VF", "")
             ),
         )
+
+        # Fix #682
+        expand_custom_tag_bg(font=font)
 
         is_italic = "Italic" in input_file
 
